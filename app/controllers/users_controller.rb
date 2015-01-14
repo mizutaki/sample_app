@@ -1,7 +1,11 @@
 class UsersController < ApplicationController
 	#指定されたメソッドをeditとupdate呼び出し前に実行する
-	before_action :signed_in_user, only:[:edit,:update]
+	before_action :signed_in_user, only:[:index,:edit,:update]
 	before_action :correct_user, only:[:edit,:update]
+
+	def index
+		@users = User.all
+	end
 
   def show
     @user = User.find(params[:id])
@@ -40,13 +44,16 @@ class UsersController < ApplicationController
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
 
-		#Before actions
-		def signed_in_user
-			redirect_to signin_url, notice: "please sign in." unless signed_in?
-		end
+    #Before actions
+    def signed_in_user
+      unless signed_in?
+        store_location
+        redirect_to signin_url, notice: "Please sign in."
+      end
+    end
 
-		def correct_user
-			@user = User.find(params[:id])
-			redirect_to(root_path) unless current_user?(@user)
-		end
+    def correct_user
+      @user = User.find(params[:id])
+      redirect_to(root_path) unless current_user?(@user)
+    end
 end
