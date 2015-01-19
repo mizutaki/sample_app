@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
-  has_secure_password
+	#Userモデル側から自身の主キーをもつMicropostsモデルを参照する
+	has_many :microposts
+	has_secure_password
   before_save { self.email = email.downcase }
   before_create :create_remember_token
   validates :name, presence: true, length: { maximum: 50 }
