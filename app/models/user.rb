@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
 	#Userモデル側から自身の主キーをもつMicropostsモデルを参照する
-	has_many :microposts
+	#Userが削除されたそのユーザに紐づく投稿も削除する
+	has_many :microposts, dependent: :destroy
 	has_secure_password
   before_save { self.email = email.downcase }
   before_create :create_remember_token
